@@ -2,3 +2,5 @@
 .playwright-mcp/
 *.class
 fontes.txt
+node_modules/
+package-lock.json
