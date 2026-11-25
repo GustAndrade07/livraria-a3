@@ -1,0 +1,105 @@
+classDiagram
+    direction LR
+
+    namespace controller {
+        class BaseController {
+            <<abstract>>
+            #loja : Loja
+            +handle(HttpExchange)
+            #tratar(...)
+        }
+        class ProdutoController
+        class CarrinhoController
+        class PedidoController
+    }
+
+    namespace view {
+        class Layout
+        class ProdutoView { +render(...) String }
+        class CarrinhoView { +render(...) String }
+        class PedidoView { +render(...) String }
+    }
+
+    namespace model {
+        class Loja {
+            <<Singleton>>
+            -instancia : Loja$
+            +getInstancia()$ Loja
+            +cadastrarProduto(...)
+            +buscarProdutos(termo)
+            +finalizarPedido(FormaPagamento) Pedido
+        }
+        class Produto
+        class Carrinho {
+            +adicionar(Produto, qtd)
+            +remover(id)
+            +getSubtotal()
+        }
+        class ItemCarrinho
+        class Pedido {
+            -estado : EstadoPedido
+            +pagar()
+            +enviar()
+            +entregar()
+            +cancelar()
+            +mudarEstado(EstadoPedido)
+            +adicionarObservador(...)
+        }
+        class FormaPagamento {
+            <<interface / Strategy>>
+            +calcularTotal(subtotal)
+        }
+        class PagamentoPix
+        class PagamentoCartao
+        class PagamentoBoleto
+        class EstadoPedido {
+            <<interface / State>>
+            +pagar()
+            +enviar()
+            +entregar()
+            +cancelar()
+        }
+        class AguardandoPagamento
+        class Pago
+        class Enviado
+        class Entregue
+        class Cancelado
+        class PedidoObserver {
+            <<interface / Observer>>
+            +estadoAlterado(Pedido, anterior)
+        }
+        class EstoqueObserver
+        class NotificacaoObserver
+    }
+
+    BaseController <|-- ProdutoController
+    BaseController <|-- CarrinhoController
+    BaseController <|-- PedidoController
+    BaseController --> Loja
+    ProdutoController --> ProdutoView
+    CarrinhoController --> CarrinhoView
+    PedidoController --> PedidoView
+    ProdutoView ..> Layout
+    CarrinhoView ..> Layout
+    PedidoView ..> Layout
+
+    Loja "1" o-- "*" Produto
+    Loja "1" o-- "1" Carrinho
+    Loja "1" o-- "*" Pedido
+    Carrinho "1" *-- "*" ItemCarrinho
+    ItemCarrinho --> Produto
+    Pedido --> ItemCarrinho
+    Pedido --> FormaPagamento
+    Pedido --> EstadoPedido
+    Pedido --> PedidoObserver
+
+    FormaPagamento <|.. PagamentoPix
+    FormaPagamento <|.. PagamentoCartao
+    FormaPagamento <|.. PagamentoBoleto
+    EstadoPedido <|.. AguardandoPagamento
+    EstadoPedido <|.. Pago
+    EstadoPedido <|.. Enviado
+    EstadoPedido <|.. Entregue
+    EstadoPedido <|.. Cancelado
+    PedidoObserver <|.. EstoqueObserver
+    PedidoObserver <|.. NotificacaoObserver
