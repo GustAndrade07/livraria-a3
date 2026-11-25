@@ -1,6 +1,7 @@
 // Teste de ponta a ponta (Playwright) da Livraria A3.
 // Pré-requisito: servidor recém-iniciado em http://localhost:8080
-async (page) => {
+// Para executar: node tests/executar-teste.js
+module.exports = async function fluxoCompleto(page) {
   const r = [];
   const check = (nome, cond) => r.push((cond ? 'PASS ' : 'FAIL ') + nome);
   const base = 'http://localhost:8080';
@@ -118,4 +119,4 @@ async (page) => {
 
   const falhas = r.filter((l) => l.startsWith('FAIL')).length;
   return r.join('\n') + '\n\n' + (r.length - falhas) + '/' + r.length + ' passaram';
-}
+};
