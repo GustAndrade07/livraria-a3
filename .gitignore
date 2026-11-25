@@ -1,0 +1,4 @@
+﻿out/
+.playwright-mcp/
+*.class
+fontes.txt
